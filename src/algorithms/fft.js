@@ -45,8 +45,8 @@ function recursiveFFT(samples) {
 
   for (let i = 0; i < M; i++) {
     const twiddleFactor = {
-      re: Math.cos((2 * Math.pi * i) / N),
-      im: -Math.sin((2 * Math.pi * i) / N),
+      re: Math.cos((2 * Math.PI * i) / N),
+      im: -Math.sin((2 * Math.PI * i) / N),
     };
 
     const twiddledOdd = complexMultiply(twiddleFactor, odd[i]);
