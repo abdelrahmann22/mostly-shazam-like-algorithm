@@ -59,13 +59,15 @@ function recursiveFFT(samples) {
 }
 
 function fft(samples) {
-  if (!Array.isArray(samples)) throw new Error("Input must be an array");
+  if (!samples || typeof samples.length !== "number") {
+    throw new Error("Input must be an array");
+  }
 
   const N = samples.length;
 
   if (N > 1 && !isPowerOfTwo(N)) throw new Error("Length must be power of 2");
 
-  const complexSamples = samples.map((value) => ({
+  const complexSamples = Array.from(samples).map((value) => ({
     re: value,
     im: 0,
   }));
