@@ -23,20 +23,19 @@ function getMagnitude({ re, im }) {
 
 function spectrogram(samples) {
   let samplesWindows = slidingWindow(samples);
-  let complexSamples = [];
+
   let spectrogram_list = [];
-  for (let i of samplesWindows) {
-    complexSamples.push(fft(i));
+  for (let window of samplesWindows) {
+    const spectrum = fft(window);
+
+    const magnitudes = [];
+    for (let j = 0; j < spectrum.length / 2; j++) {
+      magnitudes.push(getMagnitude(spectrum[j]));
+    }
+
+    spectrogram_list.push(magnitudes);
   }
 
-  for (let i = 0; i < complexSamples.length; i++) {
-    let temp = [];
-    for (let j = 0; j < complexSamples[i].length / 2; j++) {
-      temp.push(getMagnitude(complexSamples[i][j]));
-    }
-    spectrogram_list.push(temp);
-  }
-  console.log(spectrogram_list);
   return spectrogram_list;
 }
 
