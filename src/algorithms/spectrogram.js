@@ -26,7 +26,7 @@ function applyingHamming(samples) {
   const windowed = new Float32Array(N);
 
   for (let n = 0; n < N; n++) {
-    const w = 54 - 46 * Math.cos((2 * Math.PI * n) / (n - 1));
+    const w = 0.54 - 0.46 * Math.cos((2 * Math.PI * n) / (N - 1));
     windowed[n] = samples[n] * w;
   }
 
@@ -39,7 +39,6 @@ function spectrogram(samples) {
   let spectrogram_list = [];
   for (let window of samplesWindows) {
     window = applyingHamming(window);
-
     const spectrum = fft(window);
 
     const magnitudes = [];
