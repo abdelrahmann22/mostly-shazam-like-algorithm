@@ -1,6 +1,7 @@
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import { Readable } from "stream";
+import { AudioConfig } from "../config/audioConfig.js";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
@@ -9,11 +10,10 @@ export const decodeAudioBuffer = (audioBuffer) => {
     const bufferStream = Readable.from(audioBuffer);
 
     const chunks = [];
-    const sampleRate = 11025;
 
     ffmpeg(bufferStream)
-      .audioFrequency(sampleRate)
-      .audioChannels(1)
+      .audioFrequency(AudioConfig.sampleRate)
+      .audioChannels(AudioConfig.audioChannels)
       .audioCodec("pcm_s16le")
       .format("s16le")
       .on("error", (err) => {
@@ -28,7 +28,7 @@ export const decodeAudioBuffer = (audioBuffer) => {
           samples[i] = pcmBuffer.readInt16LE(i * 2) / 32768.0;
         }
 
-        resolve({ samples, sampleRate });
+        resolve({ samples, sampleRate: AudioConfig.sampleRate });
       })
       .pipe()
       .on("data", (chunk) => {

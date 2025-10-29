@@ -1,6 +1,9 @@
 import asyncHandler from "express-async-handler";
+
 import { decodeAudioBuffer } from "../utils/audioDecoder.js";
-import spectrogram from "../algorithms/spectrogram.js";
+import spectrogram from "../algorithms/dsp/spectrogram.js";
+import detectPeaks from "../algorithms/fingerprinting/peakDetection.js";
+
 export const uploadSongController = asyncHandler(async (req, res) => {
   try {
     if (!req.file)
@@ -11,6 +14,8 @@ export const uploadSongController = asyncHandler(async (req, res) => {
     const { samples, sampleRate } = await decodeAudioBuffer(audioBuffer);
 
     const spec = spectrogram(samples);
+
+    const peaks = detectPeaks(spec);
 
     res.status(200).json({
       message: "Audio decoded successfully",
