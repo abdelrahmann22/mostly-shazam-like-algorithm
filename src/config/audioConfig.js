@@ -21,4 +21,10 @@ export const AudioConfig = {
     alpha: 0.7,
     minThreshold: 0.1,
   },
+
+  fingerprinting: {
+    minTimeDelta: 100, // 100 milliseconds
+    maxTimeDelta: 500, // 500 milliseconds
+    maxTargetsPerAnchor: 10,
+  }
 };
