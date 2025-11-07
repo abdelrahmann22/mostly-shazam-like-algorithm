@@ -18,7 +18,7 @@ export const uploadSongController = asyncHandler(async (req, res) => {
 
     const peaks = detectPeaks(spec);
     const fingerprint = fingerprinting(peaks, 1)
-    console.log(fingerprint[1])
+    console.log(fingerprint)
     res.status(200).json({
       message: "Audio decoded successfully",
       sampleCount: samples.length,

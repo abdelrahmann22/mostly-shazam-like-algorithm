@@ -10,6 +10,22 @@ function hashing(anchorFreq, target, deltaTime) {
   return hash;
 }
 
+function indexFingerPrintsByHash(fingerPrints) {
+  const fingerPrintMap = {};
+  fingerPrints.forEach(fp => {
+    if (!fingerPrintMap[fp.hash]) {
+      fingerPrintMap[fp.hash] = [];
+    }
+    fingerPrintMap[fp.hash].push({
+      songId: fp.songId,
+      anchorTime: fp.anchorTime,
+    })
+
+  })
+
+  return fingerPrintMap;
+}
+
 function fingerPrint(filteredPeaks, songId) {
   const msPerFrame = (AudioConfig.hopSize / AudioConfig.sampleRate) * 1000;
   let fingerprints = [];
@@ -42,7 +58,7 @@ function fingerPrint(filteredPeaks, songId) {
     }
 
   }
-  return fingerprints;
+  return indexFingerPrintsByHash(fingerprints);
 }
 
 export default fingerPrint;
