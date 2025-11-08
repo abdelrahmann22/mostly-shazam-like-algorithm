@@ -1,6 +1,6 @@
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
-import { Readable } from "stream";
+import { PassThrough, Readable } from "stream";
 import { AudioConfig } from "../config/audioConfig.js";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
@@ -8,16 +8,13 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 export const decodeAudioBuffer = (audioBuffer) => {
   return new Promise((resolve, reject) => {
     const bufferStream = Readable.from(audioBuffer);
+    const outputStream = new PassThrough();
 
     const chunks = [];
 
-    ffmpeg(bufferStream)
-      .audioFrequency(AudioConfig.sampleRate)
-      .audioChannels(AudioConfig.audioChannels)
-      .audioCodec("pcm_s16le")
-      .format("s16le")
-      .on("error", (err) => {
-        reject(new Error(`FFmpeg error: ${err.message}`));
+    outputStream
+      .on("data", (chunk) => {
+        chunks.push(chunk);
       })
       .on("end", () => {
         const pcmBuffer = Buffer.concat(chunks);
@@ -30,9 +27,17 @@ export const decodeAudioBuffer = (audioBuffer) => {
 
         resolve({ samples, sampleRate: AudioConfig.sampleRate });
       })
-      .pipe()
-      .on("data", (chunk) => {
-        chunks.push(chunk);
+      .on("error", (err) => {
+        reject(new Error(`Stream error: ${err.message}`));
       });
+    ffmpeg(bufferStream)
+      .audioFrequency(AudioConfig.sampleRate)
+      .audioChannels(AudioConfig.audioChannels)
+      .audioCodec("pcm_s16le")
+      .format("s16le")
+      .on("error", (err) => {
+        reject(new Error(`FFmpeg error: ${err.message}`));
+      })
+      .pipe(outputStream);
   });
 };
