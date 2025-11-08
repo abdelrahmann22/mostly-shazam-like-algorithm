@@ -5,6 +5,12 @@ const insertSong = db.prepare(`
   VALUES (@title, @artist, @duration_ms, @file_path)
 `);
 
+const getSong = db.prepare(`
+    SELECT id, title, artist, duration_ms, file_path
+    FROM songs
+    WHERE id=@song_id
+  `);
+
 export function createSong({ title, artist, duration_ms, file_path }) {
   const info = insertSong.run({
     title,
@@ -13,4 +19,10 @@ export function createSong({ title, artist, duration_ms, file_path }) {
     file_path,
   });
   return Number(info.lastInsertRowid);
+}
+
+export function getMatchSong(song_id) {
+  const song = getSong.get({ song_id });
+
+  return song;
 }
