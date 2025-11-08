@@ -26,5 +26,9 @@ export const AudioConfig = {
     minTimeDelta: 100, // 100 milliseconds
     maxTimeDelta: 500, // 500 milliseconds
     maxTargetsPerAnchor: 10,
-  }
+  },
+
+  matching: {
+    binSize: 100,
+  },
 };
