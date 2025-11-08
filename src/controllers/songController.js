@@ -5,33 +5,18 @@ import { decodeAudioBuffer } from "../utils/audioDecoder.js";
 import spectrogram from "../algorithms/dsp/spectrogram.js";
 import detectPeaks from "../algorithms/fingerprint/peakDetection.js";
 import fingerprinting from "../algorithms/fingerprint/fingerPrinting.js";
-import { createSong } from "../services/songService.js";
-import { saveFingerPrints } from "../services/fingerprintService.js";
+import { createSong, getMatchSong } from "../services/songService.js";
+import {
+  getFingerPrintsByHashes,
+  saveFingerPrints,
+} from "../services/fingerprintService.js";
+import {
+  findBestMatch,
+  prepareQueryData,
+  scoreMatches,
+} from "../algorithms/matching/match.js";
 
 export const uploadSongController = asyncHandler(async (req, res) => {
-  try {
-    if (!req.file)
-      return res.status(400).json({ error: "No audio file uploaded" });
-
-    const audioBuffer = req.file.buffer;
-
-    const { samples, sampleRate } = await decodeAudioBuffer(audioBuffer);
-
-    const spec = spectrogram(samples);
-
-    const peaks = detectPeaks(spec);
-    const fingerprint = fingerprinting(peaks, 1);
-    res.status(200).json({
-      message: "Audio decoded successfully",
-      sampleCount: samples.length,
-      duration: samples.length / sampleRate,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-export const createSongController = asyncHandler(async (req, res) => {
   try {
     if (!req.file)
       return res.status(400).json({ error: "No audio file uploaded" });
@@ -70,9 +55,9 @@ export const createSongController = asyncHandler(async (req, res) => {
       file_path: relativeFilePath,
     });
 
-    const fingerprint = fingerprinting(peaks, songId);
+    const fingerprints = fingerprinting(peaks, songId);
 
-    const count = saveFingerPrints(fingerprint);
+    const count = saveFingerPrints(fingerprints);
 
     console.log(`Saved ${count} fingerprints for song ${songId}`);
 
@@ -84,6 +69,57 @@ export const createSongController = asyncHandler(async (req, res) => {
       duration_ms,
       file_path: relativeFilePath,
       fingerprintCount: count,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+export const matchingSongController = asyncHandler(async (req, res) => {
+  try {
+    if (!req.file)
+      return res.status(400).json({ error: "No audio file uploaded" });
+
+    const audioBuffer = req.file.buffer;
+
+    const { samples, sampleRate } = await decodeAudioBuffer(audioBuffer);
+
+    const spec = spectrogram(samples);
+
+    const peaks = detectPeaks(spec);
+
+    const queryFingerprints = fingerprinting(peaks, null);
+
+    const { uniqueHashes, hashIndex } = prepareQueryData(queryFingerprints);
+
+    const dbResult = getFingerPrintsByHashes(uniqueHashes);
+
+    const scores = scoreMatches(dbResult, hashIndex);
+
+    const candidate = findBestMatch(scores, queryFingerprints.length);
+
+    if (!candidate || candidate.confidence < 15) {
+      return res.status(404).json({
+        message: "No match found",
+        confidence: candidate?.confidence || 0,
+      });
+    }
+
+    const song = getMatchSong(candidate.song_id);
+
+    res.status(201).json({
+      success: true,
+      match: {
+        song_id: candidate.song_id,
+        title: song.title,
+        artist: song.artist,
+        file_path: song.file_path,
+        confidence: Math.round(candidate.confidence * 10) / 10,
+        matches: candidate.matches,
+        matchedAt: `${Math.floor(candidate.offset / 1000)}s`,
+        message:
+          candidate.confidence > 30 ? "High confidence" : "Low confidence",
+      },
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
