@@ -24,6 +24,7 @@ export function scoreMatches(dbResult, hashIndex) {
     let { hash, song_id, anchor_time } = fp;
 
     let queryFps = hashIndex.get(hash);
+    if (!queryFps || queryFps.length === 0) continue;
 
     for (let qfp of queryFps) {
       let offset = anchor_time - qfp.anchor_time;
@@ -50,21 +51,33 @@ export function findBestMatch(scores, totalQueryFingerprints) {
   for (const [song_id, offsetsMap] of scores) {
     let bestOffset = null;
     let bestCount = 0;
+    let secondBest = 0;
 
     for (const [offset, count] of offsetsMap) {
       if (count > bestCount) {
+        secondBest = bestCount;
         bestCount = count;
         bestOffset = offset;
+      } else if (count > secondBest) {
+        secondBest = count;
       }
     }
+
+    const coverage =
+      totalQueryFingerprints && totalQueryFingerprints > 0
+        ? bestCount / totalQueryFingerprints
+        : 0;
+    const separation = bestCount > 0 ? (bestCount - secondBest) / bestCount : 0;
+    const confidence =
+      coverage > 0
+        ? Math.min(100, coverage * 100 * (0.5 + 0.5 * separation))
+        : 0;
 
     candidates.push({
       song_id,
       offset: bestOffset,
       matches: bestCount,
-      confidence: totalQueryFingerprints
-        ? (bestCount / totalQueryFingerprints) * 100
-        : null,
+      confidence,
     });
   }
 
