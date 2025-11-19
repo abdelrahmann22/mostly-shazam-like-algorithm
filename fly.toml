@@ -8,6 +8,9 @@ primary_region = 'iad'
 
 [build]
 
+[processes]
+  app = "node src/server.js"
+
 [[mounts]]
   source = 'data'
   destination = '/data'
