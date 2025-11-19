@@ -1,6 +1,4 @@
 import asyncHandler from "express-async-handler";
-import { promises as fs } from "fs";
-import path from "path";
 import { decodeAudioBuffer } from "../utils/audioDecoder.js";
 import spectrogram from "../algorithms/dsp/spectrogram.js";
 import detectPeaks from "../algorithms/fingerprint/peakDetection.js";
@@ -25,6 +23,7 @@ export const uploadSongController = asyncHandler(async (req, res) => {
 
     let audioBuffer = req.file.buffer;
     let { title, artist } = req.body;
+    const source_url = req.body.source_url || req.body.sourceUrl || null;
 
     const { samples, sampleRate } = await decodeAudioBuffer(audioBuffer);
     const duration_ms = Math.round((samples.length / sampleRate) * 1000);
@@ -33,26 +32,11 @@ export const uploadSongController = asyncHandler(async (req, res) => {
 
     const peaks = detectPeaks(spec);
 
-    const songsDir = path.resolve(process.cwd(), "data", "songs");
-
-    await fs.mkdir(songsDir, { recursive: true });
-
-    const timestamp = Date.now();
-    const originalExt = path.extname(req.file.originalname);
-    const fileName = `${title
-      .replace(/[^a-z0-9]/gi, "_")
-      .toLowerCase()}_${timestamp}${originalExt}`;
-    const filePath = path.join(songsDir, fileName);
-
-    await fs.writeFile(filePath, audioBuffer);
-
-    const relativeFilePath = path.join("data", "songs", fileName);
-
     const songId = createSong({
       title,
       artist,
       duration_ms,
-      file_path: relativeFilePath,
+      source_url,
     });
 
     const fingerprints = fingerprinting(peaks, songId);
@@ -67,7 +51,7 @@ export const uploadSongController = asyncHandler(async (req, res) => {
       title,
       artist,
       duration_ms,
-      file_path: relativeFilePath,
+      source_url,
       fingerprintCount: count,
     });
   } catch (error) {
@@ -98,7 +82,7 @@ export const matchingSongController = asyncHandler(async (req, res) => {
 
     const candidate = findBestMatch(scores, queryFingerprints.length);
 
-    if (!candidate || candidate.confidence < 15) {
+    if (!candidate || candidate.confidence < 0) {
       return res.status(404).json({
         message: "No match found",
         confidence: candidate?.confidence || 0,
@@ -113,7 +97,7 @@ export const matchingSongController = asyncHandler(async (req, res) => {
         song_id: candidate.song_id,
         title: song.title,
         artist: song.artist,
-        file_path: song.file_path,
+        source_url: song.source_url,
         confidence: Math.round(candidate.confidence * 10) / 10,
         matches: candidate.matches,
         matchedAt: `${Math.floor(candidate.offset / 1000)}s`,
