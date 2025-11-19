@@ -6,8 +6,7 @@ const DB_PATH =
   process.env.DB_PATH ||
   (process.env.NODE_ENV === "production"
     ? "/mnt/shazamdata/shazam.db"
-    : null) ||
-  path.resolve(process.cwd(), "data", "shazam.db");
+    : path.resolve(process.cwd(), "data", "shazam.db"));
 
 const DB_DIR = path.dirname(DB_PATH);
 
@@ -18,7 +17,7 @@ try {
   console.log(`Directory already exists or is mounted: ${DB_DIR}`);
 }
 
-const db = new Database(DB_DIR);
+const db = new Database(DB_PATH);
 
 db.pragma("journal_mode = WAL");
 db.pragma("synchronous = NORMAL");
