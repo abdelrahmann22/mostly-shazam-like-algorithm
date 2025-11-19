@@ -1,0 +1,237 @@
+:root {
+  --primary-color: #0088ff;
+  --secondary-color: #00c3ff;
+  --bg-gradient: linear-gradient(135deg, #0054b6 0%, #0088ff 100%);
+  --text-color: #ffffff;
+  --card-bg: rgba(255, 255, 255, 0.1);
+  --pulse-color: rgba(255, 255, 255, 0.3);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-color);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  text-align: center;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 2.5rem;
+  border-radius: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+h1 {
+  margin-bottom: 2rem;
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recorder-container {
+  margin: 3rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.record-btn {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 0 15px rgba(255, 255, 255, 0.1);
+  z-index: 10;
+}
+
+.record-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 20px rgba(255, 255, 255, 0.15);
+}
+
+.record-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Shazam Logo Icon */
+.shazam-logo {
+  width: 80px;
+  height: 80px;
+  position: relative;
+}
+
+.shazam-logo::before,
+.shazam-logo::after {
+  content: "";
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--primary-color);
+}
+
+.shazam-logo::before {
+  top: 0;
+  left: 0;
+  border-bottom-right-radius: 0;
+  transform: rotate(-45deg);
+}
+
+.shazam-logo::after {
+  bottom: 0;
+  right: 0;
+  border-top-left-radius: 0;
+  transform: rotate(-45deg);
+}
+
+/* Pulse animation when recording */
+.record-btn.recording {
+  animation: pulse 2s infinite;
+}
+
+.record-btn.recording .shazam-logo::before,
+.record-btn.recording .shazam-logo::after {
+  background: var(--primary-color);
+  opacity: 0.8;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4),
+      0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  40% {
+    box-shadow: 0 0 0 30px rgba(255, 255, 255, 0),
+      0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  80% {
+    box-shadow: 0 0 0 30px rgba(255, 255, 255, 0),
+      0 0 0 50px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+#statusText {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.controls {
+  margin-bottom: 1rem;
+}
+
+.switch-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.switch-label:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.toggle-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.help-text {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 8px;
+  font-weight: 400;
+}
+
+.result-container {
+  margin-top: 2rem;
+  min-height: 100px;
+}
+
+.hidden {
+  display: none;
+}
+
+.loader {
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: 4px solid #ffffff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.song-info {
+  text-align: left;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  backdrop-filter: blur(5px);
+}
+
+.song-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.song-artist {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.8rem;
+}
+
+.confidence {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 0.5rem;
+}
+
+.error {
+  color: #ff4444;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  border-radius: 10px;
+  font-weight: 500;
+}
