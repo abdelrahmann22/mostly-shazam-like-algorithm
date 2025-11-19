@@ -18,7 +18,7 @@ export const AudioConfig = {
   ],
 
   peakDetection: {
-    alpha: 0.7,
+    alpha: 0.6,
     minThreshold: 0.1,
   },
 
