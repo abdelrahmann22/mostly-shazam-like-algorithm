@@ -6,8 +6,7 @@ const DB_DIR = process.env.HOME
   ? path.join(process.env.HOME, "data")
   : path.resolve(process.cwd(), "data");
 
-
-const DB_FILE = path.resolve(process.cwd(), "data", "shazam.db");
+const DB_FILE = path.resolve(DB_DIR, "data", "shazam.db");
 
 fs.mkdirSync(path.dirname(DB_FILE), { recursive: true });
 
