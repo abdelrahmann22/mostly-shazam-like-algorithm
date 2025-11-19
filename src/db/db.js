@@ -2,13 +2,22 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 
-const DB_DIR = process.env.HOME
-  ? path.join(process.env.HOME, "data")
-  : path.resolve(process.cwd(), "data");
+const DB_PATH =
+  process.env.DB_PATH ||
+  (process.env.NODE_ENV === "production"
+    ? "/mnt/shazamdata/shazam.db"
+    : null) ||
+  path.resolve(process.cwd(), "data", "shazam.db");
 
-const DB_FILE = path.resolve(DB_DIR, "data", "shazam.db");
+const DB_DIR = path.dirname(DB_PATH);
 
-fs.mkdirSync(path.dirname(DB_FILE), { recursive: true });
+// Create directory if it doesn't exist
+try {
+  fs.mkdirSync(DB_DIR, { recursive: true });
+  console.log(`Database directory ensured: ${DB_DIR}`);
+} catch (error) {
+  console.log(`Directory already exists or is mounted: ${DB_DIR}`);
+}
 
 const db = new Database(DB_FILE);
 
