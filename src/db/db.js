@@ -2,6 +2,11 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 
+const DB_DIR = process.env.HOME
+  ? path.join(process.env.HOME, "data")
+  : path.resolve(process.cwd(), "data");
+
+
 const DB_FILE = path.resolve(process.cwd(), "data", "shazam.db");
 
 fs.mkdirSync(path.dirname(DB_FILE), { recursive: true });
