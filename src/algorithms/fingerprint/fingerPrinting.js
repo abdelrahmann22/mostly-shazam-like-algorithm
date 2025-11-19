@@ -1,13 +1,13 @@
 import { AudioConfig } from "../../config/audioConfig.js";
 
 function hashing(anchorFreq, target, deltaTime) {
-  const f1 = Math.floor(anchorFreq);
-  const f2 = Math.floor(target);
-  const dt = Math.floor(deltaTime);
+  const f1 = Math.max(0, Math.floor(anchorFreq)) & 0x1ff; // 9 bits
+  const f2 = Math.max(0, Math.floor(target)) & 0x1ff;
+  const dt = Math.max(0, Math.floor(deltaTime)) & 0x3fff; // 14 bits
 
   const hash = (f1 << 23) | (f2 << 14) | dt;
 
-  return hash;
+  return hash >>> 0;
 }
 
 export function indexFingerPrintsByHash(fingerPrints) {
@@ -27,6 +27,11 @@ export function indexFingerPrintsByHash(fingerPrints) {
 
 function fingerPrint(filteredPeaks, song_id) {
   const msPerFrame = (AudioConfig.hopSize / AudioConfig.sampleRate) * 1000;
+  const minFrameDelta =
+    AudioConfig.fingerprinting.minTimeDelta / msPerFrame || 0;
+  const maxFrameDelta =
+    AudioConfig.fingerprinting.maxTimeDelta / msPerFrame || Infinity;
+
   let fingerprints = [];
   for (let i = 0; i < filteredPeaks.length; i++) {
     let anchor = filteredPeaks[i];
@@ -34,11 +39,12 @@ function fingerPrint(filteredPeaks, song_id) {
 
     for (let j = i + 1; j < filteredPeaks.length; j++) {
       let target = filteredPeaks[j];
-      let deltaTime = (target.time - anchor.time) * msPerFrame;
+      let frameDelta = target.time - anchor.time;
 
-      if (deltaTime < AudioConfig.fingerprinting.minTimeDelta) continue;
+      if (frameDelta < minFrameDelta) continue;
+      if (frameDelta > maxFrameDelta) break;
 
-      if (deltaTime > AudioConfig.fingerprinting.maxTimeDelta) break;
+      let deltaTime = frameDelta * msPerFrame;
 
       let hash = hashing(anchor.frequency, target.frequency, deltaTime);
       fingerprints.push({
