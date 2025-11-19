@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Song Matcher</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>What's that song?</h1>
+
+      <div class="recorder-container">
+        <div class="controls">
+          <label class="switch-label">
+            <input type="checkbox" id="systemAudioToggle" />
+            <span class="toggle-text">Record System Audio</span>
+          </label>
+          <p id="systemAudioHelp" class="help-text hidden">
+            Select "Entire Screen" or "Tab" & check "Share Audio"
+          </p>
+        </div>
+        <button id="recordBtn" class="record-btn">
+          <div class="shazam-logo"></div>
+        </button>
+        <p id="statusText">Tap to listen</p>
+      </div>
+
+      <div id="resultContainer" class="result-container hidden">
+        <div class="loader hidden" id="loader"></div>
+        <div id="matchResult" class="match-result">
+          <!-- Results will be populated here -->
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
