@@ -11,7 +11,6 @@ const DB_PATH =
 
 const DB_DIR = path.dirname(DB_PATH);
 
-// Create directory if it doesn't exist
 try {
   fs.mkdirSync(DB_DIR, { recursive: true });
   console.log(`Database directory ensured: ${DB_DIR}`);
@@ -19,7 +18,7 @@ try {
   console.log(`Directory already exists or is mounted: ${DB_DIR}`);
 }
 
-const db = new Database(DB_FILE);
+const db = new Database(DB_DIR);
 
 db.pragma("journal_mode = WAL");
 db.pragma("synchronous = NORMAL");
