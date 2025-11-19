@@ -1,22 +1,22 @@
 import db from "../db/db.js";
 
 const insertSong = db.prepare(`
-  INSERT INTO songs (title, artist, duration_ms, file_path)
-  VALUES (@title, @artist, @duration_ms, @file_path)
+  INSERT INTO songs (title, artist, duration_ms, source_url)
+  VALUES (@title, @artist, @duration_ms, @source_url)
 `);
 
 const getSong = db.prepare(`
-    SELECT id, title, artist, duration_ms, file_path
+    SELECT id, title, artist, duration_ms, source_url
     FROM songs
     WHERE id=@song_id
   `);
 
-export function createSong({ title, artist, duration_ms, file_path }) {
+export function createSong({ title, artist, duration_ms, source_url = null }) {
   const info = insertSong.run({
     title,
     artist,
     duration_ms,
-    file_path,
+    source_url,
   });
   return Number(info.lastInsertRowid);
 }
