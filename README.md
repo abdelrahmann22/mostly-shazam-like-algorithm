@@ -19,7 +19,6 @@ A minimal end-to-end clone of Shazam's core workflow that you can run locally. T
 
 - Node.js 18+ (global `fetch` is required by the import scripts)
 - FFmpeg binary available on your PATH
-- `yt-dlp` Python package or the `yt-dlp-exec` npm dependency so bulk imports can download audio
 
 ### Installation
 
@@ -95,7 +94,7 @@ public/                    Static UI served by Express
 ## Where to get help
 
 - Review the inline comments in `src/algorithms/` for implementation details.
-- Open a discussion or issue on GitHub if you hit edge cases with FFmpeg, `yt-dlp`, or fingerprint storage.
+- Open a discussion or issue on GitHub if you hit edge cases with FFmpeg, or fingerprint storage.
 - For environment-specific troubles (permissions, DB locations), inspect the logs emitted by `src/db/db.js` when the server boots.
 
 ## Maintainers & contributions
