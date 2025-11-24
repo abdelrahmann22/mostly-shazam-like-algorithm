@@ -32,11 +32,10 @@ npm install
 
 Create a `.env` file (see `.env` for defaults):
 
-| Variable   | Description                                                                       | Default            |
-| ---------- | --------------------------------------------------------------------------------- | ------------------ |
-| `PORT`     | HTTP port for the API and static UI                                               | `3000`             |
-| `DB_PATH`  | Absolute path to the SQLite database. Can live on a mounted volume in production. | `./data/shazam.db` |
-| `NODE_ENV` | Enables production-specific DB defaults                                           | `development`      |
+| Variable   | Description                             | Default       |
+| ---------- | --------------------------------------- | ------------- |
+| `PORT`     | HTTP port for the API and static UI     | `3000`        |
+| `NODE_ENV` | Enables production-specific DB defaults | `development` |
 
 The database file is created automatically; ensure the parent directory is writable.
 
