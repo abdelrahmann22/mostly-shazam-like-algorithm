@@ -222,12 +222,6 @@ h1 {
   margin-bottom: 0.8rem;
 }
 
-.confidence {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 0.5rem;
-}
-
 .error {
   color: #ff4444;
   background: rgba(0, 0, 0, 0.2);

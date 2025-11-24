@@ -148,10 +148,6 @@ function displayMatch(match) {
         <div class="song-info">
             <div class="song-title">${match.title}</div>
             <div class="song-artist">${match.artist}</div>
-            <div class="confidence">
-                Confidence: ${match.confidence}%<br>
-                Matched at: ${match.matchedAt}
-            </div>
             ${youtubeEmbed}
         </div>
     `;
