@@ -50,7 +50,9 @@ export function getFingerPrintsByHashes(hashes) {
     `);
 
     const results = stmt.all(...batch);
-    allResults.push(...results);
+    for (const row of results) {
+      allResults.push(row);
+    }
   }
   return allResults;
 }
