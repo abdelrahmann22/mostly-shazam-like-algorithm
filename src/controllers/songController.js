@@ -55,6 +55,7 @@ export const uploadSongController = asyncHandler(async (req, res) => {
       fingerprintCount: count,
     });
   } catch (error) {
+    console.error("Upload failed:", error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -106,6 +107,7 @@ export const matchingSongController = asyncHandler(async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("Matching failed:", error);
     res.status(500).json({ error: error.message });
   }
 });
