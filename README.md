@@ -1,6 +1,6 @@
 # Mostly Shazam-like Algorithm
 
-![Node.js 18+](https://img.shields.io/badge/node-%E2%89%A518-brightgreen) ![Database: SQLite](https://img.shields.io/badge/database-SQLite-blue) ![License: ISC](https://img.shields.io/badge/license-ISC-informational)
+![Node.js 22+](https://img.shields.io/badge/node-%E2%89%A522-brightgreen) ![Database: SQLite](https://img.shields.io/badge/database-SQLite-blue) ![License: ISC](https://img.shields.io/badge/license-ISC-informational)
 
 ## What the project does
 
@@ -17,7 +17,7 @@ A minimal end-to-end clone of Shazam's core workflow that you can run locally. T
 
 ### Prerequisites
 
-- Node.js 18+ (global `fetch` is required by the import scripts)
+- Node.js 22+ (global `fetch` is required by the import scripts)
 - FFmpeg binary available on your PATH
 
 ### Installation
