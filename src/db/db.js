@@ -2,22 +2,15 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 
-const DB_PATH =
-  process.env.DB_PATH ||
-  (process.env.NODE_ENV === "production"
-    ? "/mnt/shazamdata/shazam.db"
-    : path.resolve(process.cwd(), "data", "shazam.db"));
+const DB_DIR = process.env.HOME
+  ? path.join(process.env.HOME, "data")
+  : path.resolve(process.cwd(), "data");
 
-const DB_DIR = path.dirname(DB_PATH);
+const DB_FILE = path.join(DB_DIR, "shazam.db");
 
-try {
-  fs.mkdirSync(DB_DIR, { recursive: true });
-  console.log(`Database directory ensured: ${DB_DIR}`);
-} catch (error) {
-  console.log(`Directory already exists or is mounted: ${DB_DIR}`);
-}
+fs.mkdirSync(DB_DIR, { recursive: true });
 
-const db = new Database(DB_PATH);
+const db = new Database(DB_FILE);
 
 db.pragma("journal_mode = WAL");
 db.pragma("synchronous = NORMAL");
