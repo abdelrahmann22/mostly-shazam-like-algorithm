@@ -1,4 +1,4 @@
-# Mostly Shazam-like Algorithm
+<h1 align="center">Mostly Shazam-like Algorithm<h1>
 
 <p align="center">
   <img src="assests/demo.png" alt="App Screenshot" width="80%">
