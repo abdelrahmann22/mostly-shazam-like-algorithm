@@ -1,6 +1,12 @@
 # Mostly Shazam-like Algorithm
 
-![Node.js 22+](https://img.shields.io/badge/node-%E2%89%A522-brightgreen) ![Database: SQLite](https://img.shields.io/badge/database-SQLite-blue) ![License: ISC](https://img.shields.io/badge/license-ISC-informational)
+<p align="center">
+  <img src="assests/demo.png" alt="App Screenshot" width="80%">
+</p>
+
+<p align="center">
+  <a href="https://drive.google.com/file/d/1t336mAODLnzsHc6LVUzGZNMPQngKVfvp/view?usp=drive_link">🎬 Watch Demo Video</a>
+</p>
 
 ## What the project does
 
